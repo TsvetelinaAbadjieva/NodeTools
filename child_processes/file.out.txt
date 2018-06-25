@@ -1,0 +1,105 @@
+CodeWinds About  Courses  Blog  Podcast  Contact
+Basic use of Node.js streams
+In this article I will highlight the basics of using Node.js streams for web development including:
+
+Opening streams using Node.js core methods
+Opening a read stream to an existing file
+Opening a write stream for storing data in a file
+Using streams from http
+Piping streams
+Reading from one file and writing to another
+Reading from a file and serving it as response to http request
+Listening to stream events
+Listening to data events to determine the size
+Streams are powerful but easy to use
+For additional reading
+Version Information
+Author: Jeff Barczewski
+Published: August 1st, 2013
+Tags: nodejs, streams
+Level: Intermediate
+Prerequisites: buffers, events
+Node.js v0.10+ (latest stable is v0.10.15 as of this writing), but streams have generally been a part of Node.js from its early days
+Opening streams using Node.js core methods
+Node.js has a variety of built-in core methods which create readable and writable streams.
+
+Opening a read stream to an existing file
+var fs = require('fs');  // file system
+var rstream = fs.createReadStream('existingFile');
+Opening a write stream for storing data in a file
+var fs = require('fs');  // file system
+var wstream = fs.createWriteStream('fileToWrite');
+Using streams from http
+var http = require('http');
+var server = http.createServer(function (req, res) {
+  // req - request readable stream
+  // res - response writable stream
+});
+server.listen(8000, '127.0.0.1');  // start
+Piping streams
+Piping streams is taking the output of one stream and feeding it into the input of another.
+
+stream-read-write graphic
+
+Reading from one file and writing to another
+var fs = require('fs');  // file system
+var rstream = fs.createReadStream('existingFile');
+var wstream = fs.createWriteStream('myFileToWriteTo');
+rstream.pipe(wstream);
+Reading from a file and serving it as response to http request
+var fs = require('fs');  // file system
+var http = require('http');
+var server = http.createServer(function (req, res) {
+  // logic here to determine what file, etc
+  var rstream = fs.createReadStream('existFile');
+  rstream.pipe(res);
+});
+server.listen(8000, '127.0.0.1');  // start
+Listening to stream events
+Node.js streams are event emitters so you can listen to its events to monitor the data being transmitted.
+
+Listening to data events to determine the size
+var dataLength = 0;
+// using a readStream that we created already
+rstream
+  .on('data', function (chunk) {
+    dataLength += chunk.length;
+  })
+  .on('end', function () {  // done
+    console.log('The length was:', dataLength);
+  });
+Using streams created by Node.js core modules, the data type for chunk will usually be a Buffer or a string, both of which implement the length method.
+
+Streams are powerful but easy to use
+With these basics you can begin to use the power of Node.js streams in your programs. In future articles I will build on this to showcase more advanced features of streams.
+
+If you enjoyed this article or have any questions, please leave a comment or contact me via email or social network.
+
+For additional reading
+Buffer API
+File System API
+HTTP API
+Streams API
+Blog Feed  feed
+
+CodeWinds
+Helping web developers to navigate the winds of change
+Sailboat
+Subscribe to my Leading Edge member list
+Subscribe to my free Leading Edge member list
+Full Name
+Name
+Email
+Email address
+Subscribe
+×
+Jeff Barczewski
+Jeff Barczewski
+Your CodeWinds host
+
+Follow me
+ CodeWinds Podcast
+Share this page
+Twitter  Facebook  LinkedIn  Google Plus  Extra
+CodeWinds™ © Inspired Horizons 2013 - 2017 All rights reserved. Privacy Policy Sitemap Contact
+Node.js® is a registered trademark of Joyent
